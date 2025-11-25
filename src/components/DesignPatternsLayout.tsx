@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { DesignPatternsSidebar } from './DesignPatternsSidebar';
 import { designPatternsData } from '../data/designPatternsData';
-import { Layers, CheckCircle, XCircle } from 'lucide-react';
+import { Layers, CheckCircle, XCircle, Maximize2, X } from 'lucide-react';
 import { PatternDiagram } from './PatternDiagram';
 
 export const DesignPatternsLayout: React.FC = () => {
     const [activeCategory, setActiveCategory] = useState('mobile');
     const [activePattern, setActivePattern] = useState('mvvm');
+    const [isFullScreen, setIsFullScreen] = useState(false);
 
     const currentCategory = designPatternsData.find(c => c.id === activeCategory);
     const currentPattern = currentCategory?.patterns.find(p => p.id === activePattern);
@@ -94,10 +95,19 @@ export const DesignPatternsLayout: React.FC = () => {
                                 </div>
 
                                 <div className="space-y-4">
-                                    <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                                        <Layers className="text-indigo-600" size={20} />
-                                        Visual Concept
-                                    </h3>
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                                            <Layers className="text-indigo-600" size={20} />
+                                            Visual Concept
+                                        </h3>
+                                        <button
+                                            onClick={() => setIsFullScreen(true)}
+                                            className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                            title="View Full Screen"
+                                        >
+                                            <Maximize2 size={20} />
+                                        </button>
+                                    </div>
                                     <PatternDiagram
                                         nodes={currentPattern.diagramData.nodes}
                                         edges={currentPattern.diagramData.edges}
@@ -115,6 +125,38 @@ export const DesignPatternsLayout: React.FC = () => {
                     )}
                 </div>
             </main>
+
+            {/* Full Screen Modal */}
+            {isFullScreen && currentPattern && (
+                <div className="fixed inset-0 z-50 bg-white flex flex-col">
+                    <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-white">
+                        <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-3">
+                            <Layers className="text-indigo-600" size={28} />
+                            {currentPattern.title} - Visual Concept
+                        </h2>
+                        <button
+                            onClick={() => setIsFullScreen(false)}
+                            className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
+                        >
+                            <X size={28} />
+                        </button>
+                    </div>
+                    <div className="flex-1 overflow-auto p-8 bg-slate-50 flex flex-col items-center justify-center">
+                        <div className="w-full h-full max-w-7xl bg-white rounded-2xl shadow-lg border border-slate-200 p-8 flex flex-col">
+                            <div className="flex-1 flex items-center justify-center min-h-0">
+                                <PatternDiagram
+                                    nodes={currentPattern.diagramData.nodes}
+                                    edges={currentPattern.diagramData.edges}
+                                    className="h-full"
+                                />
+                            </div>
+                            <p className="text-slate-500 text-center italic mt-6 text-lg">
+                                {currentPattern.visualDescription}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

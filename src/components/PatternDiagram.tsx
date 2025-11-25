@@ -2,9 +2,12 @@ import React from 'react';
 import { Database, Server, Smartphone, Globe, User, Box } from 'lucide-react';
 import type { DiagramNode, DiagramEdge } from '../data/designPatternsData';
 
+import { twMerge } from 'tailwind-merge';
+
 interface PatternDiagramProps {
     nodes: DiagramNode[];
     edges: DiagramEdge[];
+    className?: string;
 }
 
 const getNodeIcon = (type: DiagramNode['type']) => {
@@ -30,9 +33,9 @@ const getNodeColor = (type: DiagramNode['type']) => {
     }
 };
 
-export const PatternDiagram: React.FC<PatternDiagramProps> = ({ nodes, edges }) => {
+export const PatternDiagram: React.FC<PatternDiagramProps> = ({ nodes, edges, className }) => {
     return (
-        <div className="relative w-full h-64 bg-slate-50 rounded-xl border border-slate-200 overflow-hidden">
+        <div className={twMerge("relative w-full h-64 bg-slate-50 rounded-xl border border-slate-200 overflow-hidden", className)}>
             <svg className="absolute inset-0 w-full h-full pointer-events-none">
                 <defs>
                     <marker
