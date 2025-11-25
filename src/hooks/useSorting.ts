@@ -45,15 +45,25 @@ export const useSorting = ({ initialArray, algorithm, speed = 50 }: UseSortingPr
         }
     }, [array, algorithm, steps.length]);
 
+    const isMounted = useRef(true);
+
+    useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
     // Playback logic
     useEffect(() => {
         if (isPlaying) {
             timerRef.current = setInterval(() => {
+                if (!isMounted.current) return;
+
                 setCurrentStep((prev) => {
                     if (prev < steps.length - 1) {
                         return prev + 1;
                     } else {
-                        setIsPlaying(false);
+                        if (isMounted.current) setIsPlaying(false);
                         return prev;
                     }
                 });

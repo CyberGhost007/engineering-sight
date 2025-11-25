@@ -126,15 +126,25 @@ export const useTree = ({ algorithm, speed = 1000 }: UseTreeProps) => {
         }
     }, [root, algorithm]);
 
+    const isMounted = useRef(true);
+
+    useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
     // Playback
     useEffect(() => {
         if (isPlaying) {
             timerRef.current = setInterval(() => {
+                if (!isMounted.current) return;
+
                 setCurrentStep((prev) => {
                     if (prev < steps.length - 1) {
                         return prev + 1;
                     } else {
-                        setIsPlaying(false);
+                        if (isMounted.current) setIsPlaying(false);
                         return prev;
                     }
                 });

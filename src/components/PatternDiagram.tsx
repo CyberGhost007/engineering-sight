@@ -33,7 +33,7 @@ const getNodeColor = (type: DiagramNode['type']) => {
     }
 };
 
-export const PatternDiagram: React.FC<PatternDiagramProps> = ({ nodes, edges, className }) => {
+export const PatternDiagram: React.FC<PatternDiagramProps> = React.memo(({ nodes, edges, className }) => {
     return (
         <div className={twMerge("relative w-full h-64 bg-slate-50 rounded-xl border border-slate-200 overflow-hidden", className)}>
             <svg className="absolute inset-0 w-full h-full pointer-events-none">
@@ -97,4 +97,4 @@ export const PatternDiagram: React.FC<PatternDiagramProps> = ({ nodes, edges, cl
             })}
         </div>
     );
-};
+});
